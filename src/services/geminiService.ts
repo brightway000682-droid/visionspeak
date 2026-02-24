@@ -1,19 +1,17 @@
 import { GoogleGenAI, Type, Modality, GenerateContentResponse } from "@google/genai";
 
 const getApiKey = () => {
-  try {
-    // Try process.env (Node/AI Studio)
-    if (typeof process !== 'undefined' && process.env?.GEMINI_API_KEY) {
-      return process.env.GEMINI_API_KEY;
-    }
-    // Try import.meta.env (Vite/Vercel)
-    const meta = import.meta as any;
-    if (meta.env?.VITE_GEMINI_API_KEY) {
-      return meta.env.VITE_GEMINI_API_KEY;
-    }
-  } catch (e) {
-    console.warn("API Key access error:", e);
+  // Prioritize Vite's environment variable system (Standard for Vercel + Vite)
+  const metaEnv = (import.meta as any).env;
+  if (metaEnv?.VITE_GEMINI_API_KEY) {
+    return metaEnv.VITE_GEMINI_API_KEY;
   }
+
+  // Fallback for AI Studio environment
+  if (typeof process !== 'undefined' && process.env?.GEMINI_API_KEY) {
+    return process.env.GEMINI_API_KEY;
+  }
+
   return "";
 };
 
