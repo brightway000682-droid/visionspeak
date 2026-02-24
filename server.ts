@@ -1,10 +1,15 @@
 import express from "express";
 import { createServer as createViteServer } from "vite";
 import path from "path";
+import { fileURLToPath } from "url";
 import Database from "better-sqlite3";
 import fs from "fs";
 
-const db = new Database("visionspeak.db");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const dbPath = process.env.NODE_ENV === "production" ? "/tmp/visionspeak.db" : "visionspeak.db";
+const db = new Database(dbPath);
 
 // Initialize DB
 db.exec(`
@@ -77,4 +82,8 @@ async function startServer() {
   });
 }
 
-startServer();
+if (process.env.NODE_ENV !== "production") {
+  startServer();
+}
+
+export default startServer;

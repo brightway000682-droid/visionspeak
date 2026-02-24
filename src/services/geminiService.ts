@@ -1,6 +1,23 @@
 import { GoogleGenAI, Type, Modality, GenerateContentResponse } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
+const getApiKey = () => {
+  try {
+    // Try process.env (Node/AI Studio)
+    if (typeof process !== 'undefined' && process.env?.GEMINI_API_KEY) {
+      return process.env.GEMINI_API_KEY;
+    }
+    // Try import.meta.env (Vite/Vercel)
+    const meta = import.meta as any;
+    if (meta.env?.VITE_GEMINI_API_KEY) {
+      return meta.env.VITE_GEMINI_API_KEY;
+    }
+  } catch (e) {
+    console.warn("API Key access error:", e);
+  }
+  return "";
+};
+
+const ai = new GoogleGenAI({ apiKey: getApiKey() });
 
 export interface WordAnalysis {
   word: string;
