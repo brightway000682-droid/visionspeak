@@ -1,0 +1,8 @@
+{
+  "name": "VisionSpeak",
+  "description": "Contextual English learning through screenshots and video analysis with dual-accent high-fidelity audio.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
